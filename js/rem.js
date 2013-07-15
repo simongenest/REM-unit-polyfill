@@ -159,6 +159,7 @@
     // Remove queries.
     removeMediaQueries = function(css) {
         if (!mediaQuery()) {
+            removeBrowserSpecificQueries();
             while (css.match(/@media/) !== null) { // If CSS syntax is correct there should always be a "@media" str matching a "}\s*}" string
                 var start = css.match(/@media/).index,
                     end = css.match(/\}\s*\}/);
@@ -168,6 +169,19 @@
         }
         return css;	
     },
+    
+    // removes browser specific queries
+    removeBrowserSpecificQueries = function(css) {
+ 	if (mediaQuery()) {
+ 		return css;
+ 	}
+    	while (css.match(/@-/)) !== null) { // Find @-moz(...) and @-webkit(...) queries
+    	    var start = css.match(/@-/).index,
+    	    end = css.match(/\}\s*\}/);
+    	    css = css.substring(0, start) + css.substring(end.index + end[0].length);
+    	}
+    	return css;
+    }
 
     getXMLHttpRequest = function () { // we're gonna check if our browser will let us use AJAX
         if (window.XMLHttpRequest) {
